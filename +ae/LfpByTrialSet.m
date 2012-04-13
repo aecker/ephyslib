@@ -27,7 +27,9 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
         function self = LfpByTrialSet(varargin)
             self.restrict(varargin{:})
         end
-        
+    end
+
+    methods(Access = protected)
         function makeTuples(self, key)
             
             % open LFP file

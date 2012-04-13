@@ -25,7 +25,9 @@ classdef SpikesByTrialSet < dj.Relvar & dj.AutoPopulate
         function self = SpikesByTrialSet(varargin)
             self.restrict(varargin{:})
         end
-        
+    end
+
+    methods(Access = protected)
         function makeTuples(this, key)
             tuple = key;
             tuple.pre_stim_time = 1000;

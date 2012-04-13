@@ -17,7 +17,9 @@ classdef SpikesByTrial < dj.Relvar
         function self = SpikesByTrial(varargin)
             self.restrict(varargin{:})
         end
-        
+    end
+
+    methods(Access = protected)
         function k = makeTuples(self, key, spikes, k)
             tuple = key;
             totalTrials = count(stimulation.StimTrials(rmfield(key, 'trial_num')));

@@ -17,7 +17,9 @@ classdef SpikeCounts < dj.Relvar
         function self = SpikeCounts(varargin)
             self.restrict(varargin{:})
         end
-        
+    end
+
+    methods(Access = protected)
         function makeTuples(self, key)
             b = key.spike_count_start;
             e = key.spike_count_end;

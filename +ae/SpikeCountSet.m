@@ -19,7 +19,9 @@ classdef SpikeCountSet < dj.Relvar & dj.AutoPopulate
         function self = SpikeCountSet(varargin)
             self.restrict(varargin{:})
         end
-        
+    end
+
+    methods(Access = protected)
         function makeTuples(self, key)
             insert(self, key);
             makeTuples(ae.SpikeCounts, key);
