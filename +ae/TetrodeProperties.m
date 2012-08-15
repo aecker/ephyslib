@@ -5,7 +5,6 @@ ae.TetrodeProperties (manual) # Tetrode properties
 electrode_num   : tinyint unsigned   # electrode number
 ---
 material        : ENUM("NiCh", "PtIr")  # tetrode material
-impedance       : float     # impedance at 1 kHz in kOhm (average)
 loc_x           : float     # x coordinate
 loc_y           : float     # y coordinate
 %}
