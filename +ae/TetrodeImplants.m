@@ -20,25 +20,24 @@ classdef TetrodeImplants < dj.Relvar
         end
         
         
-        function addTetrodes(self, tetrodes, x, y, materials, impedances)
+        function addTetrodes(self, tetrodes, x, y, materials)
             % Add tetrodes to implant.
-            %   addTetrodes(relvar, tetrodes, x, y, materials, impedances)
-            %   adds the specified tetrodes to the implant given by relvar.
-            %   The inputs x, y, materials and impedances are arrays/cell
-            %   arrays of the same length as tetrodes. materials can be a
-            %   string in case all tetrodes are made of the same material.
+            %   addTetrodes(relvar, tetrodes, x, y, materials) adds the
+            %   specified tetrodes to the implant given by relvar. The
+            %   inputs x, y and materials are arrays/cell arrays of the
+            %   same length as tetrodes. materials can be a string in case
+            %   all tetrodes are made of the same material.
             
             assert(count(self) == 1, 'relvar must be scalar!')
             assert(numel(tetrodes) == numel(x) && numel(x) == numel(y) && ...
-                (numel(y) == numel(materials) || ischar(materials)) && ...
-                numel(y) == numel(impedances), 'tetrode properties have inconsistent lengths!')
+                (numel(y) == numel(materials) || ischar(materials)), ...
+                'tetrode properties have inconsistent lengths!')
             key = fetch(self);
             for i = 1 : numel(tetrodes)
                 tuple = key;
                 tuple.electrode_num = tetrodes(i);
                 tuple.loc_x = x(i);
                 tuple.loc_y = y(i);
-                tuple.impedance = impedances(i);
                 if ischar(materials)
                     tuple.material = materials;
                 else
@@ -55,6 +54,9 @@ classdef TetrodeImplants < dj.Relvar
             %   session(s) to the implant defined by relvar.
             
             assert(count(self) == 1, 'relvar must be scalar!')
+            if ~isstruct(ephysKeys)
+                ephysKeys = fetch(ephysKeys);
+            end
             tuples = fetch(self * acq.Ephys(ephysKeys));
             insert(ae.TetrodeImplantsEphysLink, tuples);
         end
