@@ -22,13 +22,23 @@ classdef LfpByTrial < dj.Relvar
         
         function makeTuples(self, key, reader)
             totalTrials = count(stimulation.StimTrials(rmfield(key, 'trial_num')));
+            
             if key.trial_num < totalTrials
-                endTrial = fetch1(stimulation.StimTrialEvents( ...
-                    setfield(key, 'trial_num', key.trial_num + 1)) & 'event_type = "showStimulus"', 'event_time'); %#ok
+                switch fetch1(acq.Stimulation(key), 'exp_type')
+                    case 'AcuteGratingExperiment'
+                        event = 'showStimulus';
+                    case {'mgrad', 'movgrad'}
+                        event = 'startTrial';
+                    otherwise
+                        error('Don''t know which event to use to determine start of next trial!')
+                end
+                nextTrial = key;
+                nextTrial.trial_num = nextTrial.trial_num + 1;
+                endTrial = fetch1(stimulation.StimTrialEvents(nextTrial) & ...
+                    sprintf('event_type = "%s"', event), 'event_time');
             else
                 endTrial = fetch1(stimulation.StimTrialEvents(key), 'max(event_time) -> t') + 2000;
             end
-            endTrial = min(endTrial, reader(end, 't'));
             showStim = fetch1(stimulation.StimTrialEvents(key) & 'event_type = "showStimulus"', 'event_time');
             first = getSampleIndex(reader, showStim - fetch1(ae.LfpByTrialSet(key), 'pre_stim_time'));
             last = getSampleIndex(reader, endTrial);

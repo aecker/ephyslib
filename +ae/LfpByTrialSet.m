@@ -34,7 +34,7 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
             
             % open LFP file
             lfpFile = getLocalPath(fetch1(cont.Lfp(key), 'lfp_file'));
-            br = baseReader(lfpFile);
+            br = baseReader(sprintf(lfpFile, 3)); % sprintf: quick & dirty hack for old MPI data
             tuple = key;
             tuple.lfp_sampling_rate = getSamplingRate(br);
             tuple.pre_stim_time = 1000;
@@ -53,9 +53,14 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
             end
             
             % process electrodes & trials
-            channelNames = getChannelNames(br);
-            electrodes = regexp(channelNames, '\w(\d+)*', 'tokens', 'once');
-            electrodes = cellfun(@(x) str2double(x{1}), electrodes(:));
+            if key.setup ~= 99
+                channelNames = getChannelNames(br);
+                electrodes = regexp(channelNames, '\w(\d+)*', 'tokens', 'once');
+                electrodes = cellfun(@(x) str2double(x{1}), electrodes(:));
+            else
+                electrodes = 3 : 10;
+                channelNames = arrayfun(@(x) sprintf('t%dc1', x), electrodes, 'UniformOutput', false);
+            end
             close(br);
             for i = 1:numel(electrodes)
                 fprintf('Electrode %d\n', electrodes(i))
