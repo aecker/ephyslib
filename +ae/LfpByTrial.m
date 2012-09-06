@@ -5,7 +5,7 @@ ae.LfpByTrial (computed) # Spike times organized by trials
 -> stimulation.StimTrials
 electrode_num           : tinyint unsigned  # electrode number
 ---
-lfp_by_trial = NULL     : blob              # LFP for one trial
+lfp_by_trial = NULL     : mediumblob        # LFP for one trial
 rel_t0                  : double            # t0 of 1st LFP sample (relative to stim)
 first_sample_index      : bigint            # index (in file) of first sample
 %}
