@@ -25,7 +25,7 @@ classdef SpikesByTrial < dj.Relvar
                 switch fetch1(acq.Stimulation(key), 'exp_type')
                     case 'AcuteGratingExperiment'
                         event = 'showStimulus';
-                    case {'mgrad', 'movgrad'}
+                    case {'GratingExperiment', 'mgrad', 'movgrad'}
                         event = 'startTrial';
                     otherwise
                         error('Don''t know which event to use to determine start of next trial!')
