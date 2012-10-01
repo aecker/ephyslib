@@ -34,7 +34,12 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
             
             % open LFP file
             lfpFile = getLocalPath(fetch1(cont.Lfp(key), 'lfp_file'));
-            br = baseReader(sprintf(lfpFile, 3)); % sprintf: quick & dirty hack for old MPI data
+            if key.setup == 99
+                lfpf = sprintf(lfpFile, 3); % quick & dirty hack for old MPI data
+            else
+                lfpf = lfpFile;
+            end
+            br = baseReader(lfpf);
             tuple = key;
             tuple.lfp_sampling_rate = getSamplingRate(br);
             tuple.pre_stim_time = 1000;
