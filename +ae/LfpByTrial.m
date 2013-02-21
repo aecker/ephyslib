@@ -1,5 +1,5 @@
 %{
-ae.LfpByTrial (computed) # Spike times organized by trials
+ae.LfpByTrial (computed) # LFP organized by trials
 
 -> ae.LfpByTrialSet
 -> stimulation.StimTrials
