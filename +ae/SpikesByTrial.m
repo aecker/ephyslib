@@ -56,7 +56,7 @@ classdef SpikesByTrial < dj.Relvar
     end
     
     methods(Static)
-        function counts = spikeCount(relvar, win)
+        function [counts, varargout] = spikeCount(relvar, win, varargin)
             % Get spike counts.
             %   counts = ae.SpikesByTrial.spikeCount(relvar, win) returns
             %   the spike counts for each tuple in relvar. The counting
@@ -66,7 +66,7 @@ classdef SpikesByTrial < dj.Relvar
             % Note that you can't rely on any particular order when using
             % this function. Use spikeCountStruct if the order of the data
             % is important.
-            spikes = fetchn(relvar, 'spikes_by_trial');
+            [spikes, varargout{1 : nargout - 1}] = fetchn(relvar, 'spikes_by_trial', varargin{:});
             counts = cellfun(@(x) sum(x > win(1) & x < win(2)), spikes);
         end
         
