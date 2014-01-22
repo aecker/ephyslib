@@ -10,16 +10,11 @@ implant_date    : date     # date of implant surgery
 %}
 
 classdef TetrodeImplants < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.TetrodeImplants');
     end
     
     methods
-        function self = TetrodeImplants(varargin)
-            self.restrict(varargin{:})
-        end
-        
-        
         function addTetrodes(self, tetrodes, x, y, materials)
             % Add tetrodes to implant.
             %   addTetrodes(relvar, tetrodes, x, y, materials) adds the
@@ -57,7 +52,7 @@ classdef TetrodeImplants < dj.Relvar
             if ~isstruct(ephysKeys)
                 ephysKeys = fetch(ephysKeys);
             end
-            tuples = fetch(self * acq.Ephys(ephysKeys));
+            tuples = fetch(self * acq.Ephys & ephysKeys);
             insert(ae.TetrodeImplantsEphysLink, tuples);
         end
         
@@ -75,13 +70,13 @@ classdef TetrodeImplants < dj.Relvar
             if isnumeric(subject)
                 key.subject_id = subject;
             else
-                key.subject_id = fetch1(acq.Subjects(sprintf('subject_name = "%s"', subject)), 'subject_id');
+                key.subject_id = fetch1(acq.Subjects & sprintf('subject_name = "%s"', subject), 'subject_id');
             end
             key.implant_num = implantNum;
             
             % couple of checks to make sure insert completes without errors
-            assert(count(acq.Subjects(key)) == 1, 'Subject not found!')
-            assert(~count(ae.TetrodeImplants(key)), 'Implant exists already!')
+            assert(count(acq.Subjects & key) == 1, 'Subject not found!')
+            assert(~count(ae.TetrodeImplants & key), 'Implant exists already!')
             assert(strcmpi(hemisphere, 'left') || strcmpi(hemisphere, 'right'), 'hemisphere must be either left or right!')
             assert(ischar(area) && length(area) <= 45, 'area must be a string of length <= 45!')
             assert(~isempty(regexpi(date, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$', 'match')), ...

@@ -6,15 +6,9 @@ ae.AcqSatSet (computed) # Test for saturation of data acqusition system
 %}
 
 classdef AcqSatSet < dj.Relvar & dj.AutoPopulate
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.AcqSatSet');
         popRel = acq.Ephys & 'setup = 100'; % applies only to Blackrock system
-    end
-    
-    methods 
-        function self = AcqSatSet(varargin)
-            self.restrict(varargin{:})
-        end
     end
     
     methods (Access = protected)

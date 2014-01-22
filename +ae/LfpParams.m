@@ -7,14 +7,7 @@ max_freq        : float                 # highpass cutoff
 %}
 
 classdef LfpParams < dj.Relvar
-
-	properties(Constant)
+	properties (Constant)
 		table = dj.Table('ae.LfpParams')
-	end
-
-	methods
-		function self = LfpParams(varargin)
-			self.restrict(varargin)
-		end
 	end
 end

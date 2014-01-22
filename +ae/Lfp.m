@@ -10,19 +10,15 @@ lfp_t0              : double            # time of first sample
 %}
 
 classdef Lfp < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.Lfp');
     end
     
     methods 
-        function self = Lfp(varargin)
-            self.restrict(varargin{:})
-        end
-        
         function makeTuples(self, key)
             
             % open LFP file
-            lfpFile = fetch1(cont.Lfp(key), 'lfp_file');
+            lfpFile = fetch1(cont.Lfp & key, 'lfp_file');
             br = baseReader(getLocalPath(lfpFile), sprintf('t%d', key.electrode_num));
             Fs = getSamplingRate(br);
             lfp = br(:, 1);
@@ -54,7 +50,7 @@ classdef Lfp < dj.Relvar
             end
             
             % fix sign flip in Neuralynx and Hammer files
-            software = fetch1(acq.Sessions(key), 'recording_software');
+            software = fetch1(acq.Sessions & key, 'recording_software');
             if any(strcmp(software, {'Neuralynx', 'Hammer'}))
                 lfp = -lfp;
             end

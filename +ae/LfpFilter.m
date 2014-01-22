@@ -9,14 +9,7 @@ dont_care_width : float                 # width of dont care band (outside passb
 %}
 
 classdef LfpFilter < dj.Relvar
-
-	properties(Constant)
+	properties (Constant)
 		table = dj.Table('ae.LfpFilter')
-	end
-
-	methods
-		function self = LfpFilter(varargin)
-			self.restrict(varargin)
-		end
 	end
 end

@@ -7,13 +7,7 @@ spike_count_end   : float # end of window
 %}
 
 classdef SpikeCountParams < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.SpikeCountParams');
-    end
-    
-    methods 
-        function self = SpikeCountParams(varargin)
-            self.restrict(varargin{:})
-        end
     end
 end

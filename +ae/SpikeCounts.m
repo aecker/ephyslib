@@ -9,27 +9,23 @@ spike_count : int # number of spikes in counting window
 %}
 
 classdef SpikeCounts < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.SpikeCounts');
     end
     
     methods
-        function self = SpikeCounts(varargin)
-            self.restrict(varargin{:})
-        end
-        
         function makeTuples(self, key)
             b = key.spike_count_start;
             e = key.spike_count_end;
-            for unitKey = fetch(ephys.Spikes(key))'
+            for unitKey = fetch(ephys.Spikes & key)'
                 fprintf('Unit %d\n', unitKey.unit_id)
-                t = fetch1(ephys.Spikes(unitKey), 'spike_times');
+                t = fetch1(ephys.Spikes & unitKey, 'spike_times');
                 nSpikes = numel(t);
                 k = 0;
-                trials = fetch(ephys.Spikes(unitKey) ...
-                    * ((stimulation.StimTrials(key) * stimulation.StimTrialEvents) ...
+                trials = fetch((ephys.Spikes & unitKey) ...
+                    * ((stimulation.StimTrials * stimulation.StimTrialEvents & key) ...
                         & 'valid_trial = true AND event_type = "showStimulus"') ...
-                    * ae.SpikeCountParams(key), 'event_time -> show_stim_time');
+                    * (ae.SpikeCountParams & key), 'event_time -> show_stim_time');
                 spikeCount = cell(numel(trials), 1);
                 trialNum = 1;
                 for trial = trials'

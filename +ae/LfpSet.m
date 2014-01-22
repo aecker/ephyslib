@@ -7,21 +7,15 @@ ae.LfpSet (imported) # LFP
 %}
 
 classdef LfpSet < dj.Relvar & dj.AutoPopulate
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.LfpSet');
-        popRel = cont.Lfp * ae.LfpParams('max_freq <= 100');
+        popRel = cont.Lfp * ae.LfpParams & 'max_freq <= 100';
     end
     
-    methods
-        function self = LfpSet(varargin)
-            self.restrict(varargin{:})
-        end
-    end
-
-    methods(Access = protected)
+    methods (Access = protected)
         function makeTuples(self, key)
             if key.setup ~= 99
-                lfpFile = fetch1(cont.Lfp(key), 'lfp_file');
+                lfpFile = fetch1(cont.Lfp & key, 'lfp_file');
                 br = baseReader(getLocalPath(lfpFile));
                 channelNames = getChannelNames(br);
                 electrodes = regexp(channelNames, '\w(\d+)*', 'tokens', 'once');

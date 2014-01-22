@@ -6,13 +6,7 @@ ae.LfpByTrialProjects (manual) # Mapping from parameters to projects
 %}
 
 classdef LfpByTrialProjects < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.LfpByTrialProjects');
-    end
-    
-    methods 
-        function self = LfpByTrialProjects(varargin)
-            self.restrict(varargin{:})
-        end
     end
 end

@@ -17,23 +17,16 @@ lfpbytrialset_ts=CURRENT_TIMESTAMP  : timestamp     # automatic timestamp. Do no
 % reason.
 
 classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.LfpByTrialSet');
-        popRel = (acq.StimulationSyncDiode & (ae.ProjectsStimulation * ae.LfpByTrialProjects)) ...
-            * cont.Lfp * stimulation.StimTrialGroup * ae.LfpFilter;
-    end
-    
-    methods 
-        function self = LfpByTrialSet(varargin)
-            self.restrict(varargin{:})
-        end
+        popRel = acq.StimulationSyncDiode * cont.Lfp * stimulation.StimTrialGroup * ae.LfpFilter;
     end
 
-    methods(Access = protected)
+    methods (Access = protected)
         function makeTuples(self, key)
             
             % open LFP file
-            lfpFile = getLocalPath(fetch1(cont.Lfp(key), 'lfp_file'));
+            lfpFile = getLocalPath(fetch1(cont.Lfp & key, 'lfp_file'));
             if key.setup == 99
                 lfpf = sprintf(lfpFile, 3); % quick & dirty hack for old MPI data
             else
@@ -46,7 +39,7 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
             insert(self, tuple);
             
             % setup filtering
-            [fmin, fmax, w] = fetch1(ae.LfpFilter(key), 'min_freq', 'max_freq', 'dont_care_width');
+            [fmin, fmax, w] = fetch1(ae.LfpFilter & key, 'min_freq', 'max_freq', 'dont_care_width');
             if fmin > 0 && fmax > 0
                 filter = filterFactory.createBandpass(fmin - w, fmin, fmax, fmax + w, tuple.lfp_sampling_rate);
             elseif fmin > 0
@@ -67,7 +60,7 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
                 channelNames = arrayfun(@(x) sprintf('t%dc1', x), electrodes, 'UniformOutput', false);
             end
             close(br);
-            for i = 1:numel(electrodes)
+            for i = 1 : numel(electrodes)
                 fprintf('Electrode %d\n', electrodes(i))
                 br = baseReader(lfpFile, channelNames{i});
                 if ~isempty(filter)
@@ -75,9 +68,9 @@ classdef LfpByTrialSet < dj.Relvar & dj.AutoPopulate
                 else
                     reader = br;
                 end
-                trials = fetch(cont.Lfp(key) * (stimulation.StimTrials(key) ...
+                trials = fetch((cont.Lfp & key) * (stimulation.StimTrials & key ...
                     & stimulation.StimTrialEvents('event_type = "showStimulus"')) ...
-                    * ae.LfpFilter(key));
+                    * (ae.LfpFilter & key));
                 for trial = trials'
                     trial.electrode_num = electrodes(i);
                     makeTuples(ae.LfpByTrial, trial, reader);

@@ -7,13 +7,7 @@ ae.TetrodeImplantsEphysLink (manual) # maps tetrode implants to ephys recordings
 %}
 
 classdef TetrodeImplantsEphysLink < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.TetrodeImplantsEphysLink');
-    end
-    
-    methods
-        function self = TetrodeImplantsEphysLink(varargin)
-            self.restrict(varargin{:})
-        end
     end
 end

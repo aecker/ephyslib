@@ -10,13 +10,7 @@ sat_end         : double            # end of saturation period
 %}
 
 classdef AcqSat < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.AcqSat');
-    end
-    
-    methods 
-        function self = AcqSat(varargin)
-            self.restrict(varargin{:})
-        end
     end
 end

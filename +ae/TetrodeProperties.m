@@ -12,13 +12,7 @@ depth_to_wm = NULL    : float     # adjustments until in white matter (mu)
 %}
 
 classdef TetrodeProperties < dj.Relvar
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.TetrodeProperties');
-    end
-    
-    methods
-        function self = TetrodeProperties(varargin)
-            self.restrict(varargin{:})
-        end
     end
 end

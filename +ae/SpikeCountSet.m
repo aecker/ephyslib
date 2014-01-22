@@ -9,19 +9,12 @@ ae.SpikeCountSet (computed) # Spike counts
 %}
 
 classdef SpikeCountSet < dj.Relvar & dj.AutoPopulate
-    properties(Constant)
+    properties (Constant)
         table = dj.Table('ae.SpikeCountSet');
-        popRel = (acq.StimulationSyncDiode & (ae.ProjectsStimulation * ae.SpikeCountProjects)) ...
-            * ephys.SpikeSet * stimulation.StimTrialGroup * ae.SpikeCountParams;
+        popRel = acq.StimulationSyncDiode * ephys.SpikeSet * stimulation.StimTrialGroup * ae.SpikeCountParams;
     end
     
-    methods 
-        function self = SpikeCountSet(varargin)
-            self.restrict(varargin{:})
-        end
-    end
-
-    methods(Access = protected)
+    methods (Access = protected)
         function makeTuples(self, key)
             insert(self, key);
             makeTuples(ae.SpikeCounts, key);
