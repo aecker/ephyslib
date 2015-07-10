@@ -29,7 +29,7 @@ classdef SpikesByTrialSet < dj.Relvar & dj.AutoPopulate
                 fprintf('Unit %d\n', unitKey.unit_id)
                 spikes = fetch1(ephys.Spikes & unitKey, 'spike_times');
                 k = 0;
-                trials = fetch(ephys.Spikes & unitKey ...
+                trials = fetch((ephys.Spikes & unitKey) ...
                     * (stimulation.StimTrials & key & stimulation.StimTrialEvents('event_type = "showStimulus"')));
                 for trial = trials'
                     k = makeTuples(ae.SpikesByTrial, trial, spikes, k);

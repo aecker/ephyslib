@@ -21,7 +21,9 @@ classdef SpikesByTrial < dj.Relvar
                 switch fetch1(acq.Stimulation & key, 'exp_type')
                     case 'AcuteGratingExperiment'
                         event = 'showStimulus';
-                    case {'GratingExperiment', 'mgrad', 'movgrad'}
+                    case {'GratingExperiment', 'mgrad', 'movgrad', ...
+                          'SparseCodingControlExperiment', 'SparseCodingExperiment', ...
+                          'DotMappingExperiment'}
                         event = 'startTrial';
                     otherwise
                         error('Don''t know which event to use to determine start of next trial!')
@@ -46,7 +48,7 @@ classdef SpikesByTrial < dj.Relvar
             while k < nSpikes && spikes(k + 1) < endTrial
                 k = k + 1;
             end
-            tuple.spikes_by_trial = spikes(k0 + 1 : k) - showStim;
+            tuple.spikes_by_trial = spikes(k0 + 1 : k) - double(showStim);
             insert(self, tuple);
         end
     end
